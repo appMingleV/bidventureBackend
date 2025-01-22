@@ -24,8 +24,8 @@ app.use('/api', routes);
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
-  socket.emit('welcome', 'Hello from the server!');
-
+  socket.emit('welcome', 'Hello from the ');
+   
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
