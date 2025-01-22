@@ -95,7 +95,7 @@ class UserAuthController {
                 status: false,
                 message: 'User ID is required',
             });
-            const bidFormDetais=await BidForm.create({userId,...bidFormDetails,eventImage:req.file.filename});
+            const bidFormDetais=await BidForm.create({userId,...bidFormDetails,eventImage:req?.file?.filename});
         
             return res.status(200).json({
                 status: true,
