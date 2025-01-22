@@ -36,9 +36,8 @@ server.listen(process.env.PORT, (err) => {
     console.error(err);
   } else {
     console.log(`Server running on port ${process.env.PORT}`);
-<<<<<<< HEAD
+}
+
 })
-=======
-  }
-});
->>>>>>> refs/remotes/origin/main
+  
+

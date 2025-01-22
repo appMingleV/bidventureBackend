@@ -6,7 +6,7 @@ const red = '\x1b[31m%s\x1b[0m';
 
 export const connectDB = async ()=>{
     try {
-        const result = await mongoose.connect("mongodb://127.0.0.1:27017/bidventure?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.2");
+        const result = await mongoose.connect("mongodb+srv://vanshdeep703:9kUetHTeRCYi7HqR@cluster0.c7mpp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
        
         if(result){
             console.log("connected to the database")
