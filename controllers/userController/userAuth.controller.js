@@ -64,7 +64,7 @@ class UserAuthController {
             const token = jwt.sign({ user: mobile }, "dasfa123143");
 
             const user = await userAuth.findOne({mobile});
-            // console.log(user,token);
+            console.log(user,token);
             if(!user) await userAuth.create({mobile});
 
             const updateUser = await userAuth.findOneAndUpdate(
@@ -89,6 +89,7 @@ class UserAuthController {
         try{
            const bidFormDetails={...req.body};
            const {userId}=req.params;
+            console.log(bidFormDetails);
             if(!userId) return res.status(403).json({
                 status: false,
                 message: 'User ID is required',
