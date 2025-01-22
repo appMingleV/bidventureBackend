@@ -2,6 +2,7 @@ import {Router} from 'express';
 import userAuthController from '../../controllers/userController/userAuth.controller.js';
 import {userAutherization} from '../../middlewares/auth.js'
 import bids from './bid.route.js'
+import multer from 'multer';
 const routes = Router();
 
 
