@@ -58,6 +58,9 @@ const bidFormSchema=new mongoose.Schema({
     eventStatus:{
         type:String,
         default:"pending"
+    },
+    eventImage:{
+        type:String,
     }
 
 },{timestamps:true})
