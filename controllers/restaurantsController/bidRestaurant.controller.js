@@ -40,6 +40,7 @@ class bidRestarurant{
                 message:'Please provide bidId'
             })
         }
+        console.log(bidId)
         const bid=await BidForm.findById(bidId);
         if(!bid){
             return res.status(404).json({
