@@ -89,12 +89,13 @@ class UserAuthController {
         try{
            const bidFormDetails={...req.body};
            const {userId}=req.params;
+             
             console.log(bidFormDetails);
             if(!userId) return res.status(403).json({
                 status: false,
                 message: 'User ID is required',
             });
-            const bidFormDetais=await BidForm.create({userId,...bidFormDetails});
+            const bidFormDetais=await BidForm.create({userId,...bidFormDetails,eventImage:req.file.filename});
         
             return res.status(200).json({
                 status: true,
