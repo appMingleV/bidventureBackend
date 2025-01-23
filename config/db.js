@@ -1,12 +1,15 @@
+import { config } from "dotenv";
+config();
 import mongoose from "mongoose";
 
 const DB_URI = process.env.DB_URI;
+// console.log(DB_URI)
 // ANSI escape code for red text
 const red = '\x1b[31m%s\x1b[0m';
 
 export const connectDB = async ()=>{
     try {
-        const result = await mongoose.connect(DB_URI);
+        const result = await mongoose.connect(`${DB_URI}`);
        
         if(result){
             console.log("connected to the database")

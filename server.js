@@ -1,12 +1,12 @@
+import { config } from 'dotenv';
+config();
 import express from 'express';
-import { configDotenv } from 'dotenv';
 import { connectDB } from './config/db.js';
 import routes from './routes/index.js';
 import http from 'http';
 import { Server } from 'socket.io';
 
 connectDB();
-configDotenv();
 
 const app = express();
 const server = http.createServer(app);

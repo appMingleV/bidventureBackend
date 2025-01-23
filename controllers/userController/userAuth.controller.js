@@ -1,15 +1,8 @@
-import userAuth from '../../models/users/userAuth.model.js';
 import BidForm from '../../models/users/bidForm.model.js';
 import jwt from 'jsonwebtoken';
+import User from '../../models/users/userAuth.model.js';
 
 class UserAuthController {
-    constructor() {
-        this.userNumber = {};
-
-        // Binding methods to ensure the correct context
-        this.login = this.login.bind(this);
-        this.verifyOtp = this.verifyOtp.bind(this);
-    }
 
     async login(req, res) {
         try {
@@ -22,7 +15,23 @@ class UserAuthController {
             }
 
             // Save the mobile number with dummy OTP for now
-            this.userNumber[mobile] = { otp: '1234' };
+            const otp = 1235;
+
+            const user = await User.findOne({mobile});
+            // console.log("user data -> ",user)
+            if(!user){
+                // console.log("new user")
+                const newUser = User({
+                    mobile,
+                    otp
+                })
+
+                await newUser.save();
+            }else{
+                // console.log("old user")
+                user.otp = otp;
+                await user.save();
+            }
 
             return res.status(200).json({
                 status: true,
@@ -45,15 +54,18 @@ class UserAuthController {
                     message: 'Please provide mobile number and OTP',
                 });
             }
+
+            const user = await User.findOne({mobile});
+
             //  console.log(this.userNumber)
-            if (!this.userNumber[mobile]) {
+            if (!user) {
                 return res.status(403).json({
                     status: false,
-                    message: 'Mobile number is not found',
+                    message: 'User not found',
                 });
             }
 
-            if (+this.userNumber[mobile].otp !== otp) {
+            if (user.otp !== otp) {
                 return res.status(403).json({
                     status: false,
                     message: 'Invalid OTP',
@@ -63,11 +75,11 @@ class UserAuthController {
             const secretKey = process.env.SECRETE_KEY;
             const token = jwt.sign({ user: mobile }, secretKey);
 
-            const user = await userAuth.findOne({mobile});
-            console.log(user,token);
+            // const user = await userAuth.findOne({mobile});
+            // console.log(user,token);
             if(!user) await userAuth.create({mobile});
 
-            const updateUser = await userAuth.findOneAndUpdate(
+            const updateUser = await User.findOneAndUpdate(
                 { mobile: mobile }, // Query to find the document
                 { token: token },   // Fields to update
                 { new: true }       // Option to return the updated document
@@ -123,7 +135,7 @@ class UserAuthController {
         if(userId!=req.user.id){
             return res.status(403).json({
                 status: false,
-                message: 'wronge user access data',
+                message: 'wrong user access data',
             });
         }
         const updateProfile=await userAuth.findByIdAndUpdate(userId,profile);
