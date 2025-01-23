@@ -14,20 +14,21 @@ export const userAutherization=(req,res,next)=>{
             return res.status(403).json({ msg: "Token not provided", status: false });
           }
 
-         const secretKey = process.env.JWT_SECRET;
+         const secretKey = process.env.SECRETE_KEY;
+        //  console.log("secret key ---> ",secretKey)
         
-          jwt.verify(token, "dasfa123143", async(error, decoded) => {
+          jwt.verify(token, secretKey , async(error, decoded) => {
             if (error) {
               return res.status(401).json({ msg: "Invalid or expired token", status: false });
             }
-            console.log(decoded);
+            // console.log(decoded);
             const userDetails=await userAuth.findOne({mobile:decoded?.user});
       
             if(!userDetails)return res.status(400).json({ status:"failed",message:"user not found" });
-             console.log(userDetails);
-            if(token!=userDetails.token)return res.status(400).json({ status:"failed",message:"token does not match! please login again"});
+            //  console.log("userDetails --> ",userDetails);
+            if(token!==userDetails.token)return res.status(400).json({ status:"failed",message:"token does not match! please login again"});
             // Token is valid, proceed with request
-            req.user = {id:userDetails.id,...decoded};  // Store decoded user info in req for use in other routes
+            req.user = {id:userDetails._id};  // Store decoded user info in req for use in other routes
             next();
           });
           //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjo3OTA2ODM3MDg2LCJpYXQiOjE3Mzc0NDM3NTF9.NEoEWF8qlqSWvnFHRNtMoGyUE0hDFrf8fY96qrZMW9s

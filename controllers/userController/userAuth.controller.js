@@ -1,6 +1,7 @@
 import BidForm from '../../models/users/bidForm.model.js';
 import jwt from 'jsonwebtoken';
 import User from '../../models/users/userAuth.model.js';
+import fs from 'fs';
 
 class UserAuthController {
 
@@ -124,22 +125,18 @@ class UserAuthController {
 
     async profile(req,res){
     try{
-        const {userId}=req.params;
-        const profile={...req.body}
+        const userId = req.user.id;
+        // console.log("userId --> ",userId)
+        const profile = {...req.body}
         if(!userId){
             return res.status(403).json({
                 status: false,
                 message: 'User ID is required',
             });
         }
-        if(userId!=req.user.id){
-            return res.status(403).json({
-                status: false,
-                message: 'wrong user access data',
-            });
-        }
-        const updateProfile=await userAuth.findByIdAndUpdate(userId,profile);
-        if(!updateProfile){
+        
+        const updatedProfile = await User.findByIdAndUpdate(userId,profile);
+        if(!updatedProfile){
             return res.status(403).json({
                 status: false,
                 message: 'Failed to added profile',
@@ -150,7 +147,7 @@ class UserAuthController {
     return res.status(200).json({
         status: true,
         message: 'User profile added successfully',
-        userId,
+        updatedProfile,
     })
     }catch(err){
         return res.status(500).json({
@@ -163,20 +160,15 @@ class UserAuthController {
 
     async getProfile(req,res){
         try{
-            const {userId}=req.params;
+            const userId = req.user.id;
             if(!userId){
                 return res.status(403).json({
                     status: false,
                     message: 'User ID is required',
                 });
             }
-            if(userId!=req.user.id){
-                return res.status(403).json({
-                    status: false,
-                    message: 'wronge user access data',
-                });
-            }
-            const userProfile=await userAuth.findById(userId);
+            
+            const userProfile = await User.findById(userId);
             if(!userProfile){
                 return res.status(403).json({
                     status: false,
@@ -190,6 +182,35 @@ class UserAuthController {
                 userProfile,
             })
         }catch(err){
+            return res.status(500).json({
+                status: false,
+                message: err.message,
+            });
+        }
+    }
+
+    async updateProfilePicture(req,res){
+        try {
+            const userId = req.user.id;
+
+            const user = await User.findById(userId);
+            const profilePicture = req.file.filename;
+            if(!profilePicture){
+                return res.status(400).json({message:"Profile picture not found",success:false});
+            }
+
+            if(!user){
+                return res.status(400).json({message:"User Not found",success:false})
+            }
+
+            if(user.profilePicture && fs.existsSync(`Uploads/${user.profilePicture}`)){
+                fs.unlinkSync(`Uploads/${user.profilePicture}`);
+            }
+
+            user.profilePicture = profilePicture;
+            await user.save();
+
+        } catch (error) {
             return res.status(500).json({
                 status: false,
                 message: err.message,

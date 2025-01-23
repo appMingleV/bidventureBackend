@@ -20,11 +20,13 @@ const bidFormSchema=new mongoose.Schema({
     },
     numberAdults:{
         type:Number,
-        required:[true,"Number of Adults is required"]
+        required:[true,"Number of Adults is required"],
+        min:[1,"Number of Adults can't be smaller than 1"]
     },
     numberKids:{
         type:Number,
-        required:[true,"Number of Kids is required"]
+        required:[true,"Number of Kids is required"],
+        min:[0,"Number of Kids can't be smaller than 0"]
     },
     budget:{
         type:Number,
@@ -46,7 +48,6 @@ const bidFormSchema=new mongoose.Schema({
     fullAddress:{
        type:String,
     },
-
     foodType:{
         type:String,
         enum:["veg","non-veg","both"],
