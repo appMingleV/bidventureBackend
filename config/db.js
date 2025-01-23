@@ -6,7 +6,7 @@ const red = '\x1b[31m%s\x1b[0m';
 
 export const connectDB = async ()=>{
     try {
-        const result = await mongoose.connect("mongodb+srv://vanshdeep703:ArrXOjO0nJD3ag43@cluster0.vkwi3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        const result = await mongoose.connect(DB_URI);
        
         if(result){
             console.log("connected to the database")
