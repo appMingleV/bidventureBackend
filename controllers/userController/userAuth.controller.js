@@ -45,7 +45,7 @@ class UserAuthController {
                     message: 'Please provide mobile number and OTP',
                 });
             }
-             console.log(this.userNumber)
+            //  console.log(this.userNumber)
             if (!this.userNumber[mobile]) {
                 return res.status(403).json({
                     status: false,
@@ -61,7 +61,7 @@ class UserAuthController {
             }
 
             const secretKey = process.env.SECRETE_KEY;
-            const token = jwt.sign({ user: mobile }, "dasfa123143");
+            const token = jwt.sign({ user: mobile }, secretKey);
 
             const user = await userAuth.findOne({mobile});
             console.log(user,token);
@@ -72,7 +72,7 @@ class UserAuthController {
                 { token: token },   // Fields to update
                 { new: true }       // Option to return the updated document
             );
-            console.log("user token ",updateUser,token)
+            // console.log("user token ",updateUser,token)
             return res.status(200).json({
                 status: true,
                 message: 'Login successfully',
