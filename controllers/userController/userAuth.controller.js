@@ -217,6 +217,36 @@ class UserAuthController {
             });
         }
     }
+
+    async updateEventStatus(req,res){
+        try {
+            
+            const bidId = req.params.id;
+            const { status } = req.body;
+            const event = BidForm.findById(bidId);
+
+            if(!event){
+                return res.status(400).json({message:"Event not found",success:false})
+            }
+            if(status!=="Canceled"){
+                return res.status(400).json({message:"Invalid request, status must be 'Canceled' ",success:false})
+            }
+
+            if(event.eventStatus!=="Canceled" || event.eventStatus!=="Completed"){
+                event.eventStatus = status;
+                await event.save();
+                res.status(200).json({message:`Event has been ${status}`,success:true});
+            }else{
+                return res.status(400).json({message:"Can't update the event status",success:false});
+            }
+
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: err.message,
+            });
+        }
+    }
 }
 
 export default new UserAuthController();

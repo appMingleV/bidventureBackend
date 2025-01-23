@@ -5,13 +5,21 @@ import bids from './bid.route.js'
 import { upload } from '../../middlewares/multer.js'
 const routes = Router();
 
+const userProtectedRoutes = routes.use(userAutherization);
 
-routes.post('/login',userAuthController.login)
-.post('/login/verifyOTP',userAuthController.verifyOtp)
-.post('/bidForm/:userId',userAutherization,userAuthController.bidingForm)
-.post('/profile',userAutherization,userAuthController.profile)
-.get('/profile/',userAutherization,userAuthController.getProfile)
-.put('/profile-picture',userAutherization,upload.single('profilePicture'),userAuthController.updateProfilePicture)
-.use('/bid',userAutherization,bids)
+// user's public routes
+routes
+    .post('/login',userAuthController.login)
+    .post('/login/verifyOTP',userAuthController.verifyOtp)
+
+// user protected routes
+userProtectedRoutes
+    .post('/bidForm/:userId',userAuthController.bidingForm)
+    .post('/profile',userAuthController.profile)
+    .get('/profile/',userAuthController.getProfile)
+    .put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
+    .use('/bid',bids)
+    .put('/cancel-event/:id',userAuthController.updateEventStatus)
 
 export default routes;
+export { userProtectedRoutes }

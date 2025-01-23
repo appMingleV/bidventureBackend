@@ -58,7 +58,8 @@ const bidFormSchema=new mongoose.Schema({
     },
     eventStatus:{
         type:String,
-        default:"pending"
+        enum:['Pending','Accepted','Completed','Canceled'],
+        default:"Pending"
     },
     eventImage:{
         type:String,
