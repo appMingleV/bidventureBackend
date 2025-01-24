@@ -25,7 +25,7 @@ const userSchema=new mongoose.Schema({
     token:{
         type:String,
     },
-    photo:{
+    profilePicture:{
         type:String,
     }
 })
