@@ -210,6 +210,8 @@ class UserAuthController {
             user.profilePicture = profilePicture;
             await user.save();
 
+            res.status(200).json({message:"Profile Picture Updated Successfully",success:true,user});
+
         } catch (error) {
             return res.status(500).json({
                 status: false,
