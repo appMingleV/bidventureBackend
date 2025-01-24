@@ -247,6 +247,33 @@ class UserAuthController {
             });
         }
     }
+
+    async updateEventDetails(req,res){
+        try {
+            const bidId = req.params.id;
+
+            if(!bidId){
+                return res.status().json({message:"Invalid bid",success:false});
+            }
+
+            const editedEventDetails = {...req.body};
+            editedEventDetails.eventStatus = "Pending";
+
+            const updatedEventDetails = await editedEventDetails.save();
+
+            if(!updatedEventDetails){
+                return res.status(400).json({message:"Can't update the Event details",success:false})
+            }
+
+            res.status(200).json({message:"Updated the Event details",success:true,updatedEventDetails});
+
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: err.message,
+            });
+        }
+    }
 }
 
 export default new UserAuthController();
