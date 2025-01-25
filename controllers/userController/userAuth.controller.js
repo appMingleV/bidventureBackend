@@ -225,7 +225,7 @@ class UserAuthController {
             
             const bidId = req.params.id;
             const { status } = req.body;
-            const event = BidForm.findById(bidId);
+            const event = await BidForm.findById(bidId);
 
             if(!event){
                 return res.status(400).json({message:"Event not found",success:false})
@@ -255,7 +255,7 @@ class UserAuthController {
             const bidId = req.params.id;
 
             if(!bidId){
-                return res.status().json({message:"Invalid bid",success:false});
+                return res.status(400).json({message:"Invalid bid",success:false});
             }
 
             const editedEventDetails = {...req.body};
