@@ -4,8 +4,9 @@ import {userAutherization} from '../../middlewares/auth.js'
 import bids from './bid.route.js'
 import { upload } from '../../middlewares/multer.js'
 const routes = Router();
+const userProtectedRoutes = Router();
 
-const userProtectedRoutes = routes.use(userAutherization);
+userProtectedRoutes.use(userAutherization);
 
 // user's public routes
 routes
