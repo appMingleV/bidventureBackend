@@ -68,6 +68,73 @@ class restaurant{
             })
         }
     }
+    async updateRestaurant(req,res){
+        try {
+            const restaurantId = req.restaurantUser.id; // Extract restaurant ID from the authenticated user
+            // console.log("---> ",req.restaurantUser)
+            
+            const restaurant = await Restaurant.findById(restaurantId);
+    
+            if (!restaurant) {
+                return res.status(400).json({ message: "Restaurant not found!", success: false });
+            }
+    
+            // Handle uploaded files
+            const uploadedImages = req.files?.images
+                ? req.files?.images.map((file) => file.filename)
+                : [];
+            const uploadedVideo = req.files?.video ? req.files?.video[0].filename : null;
+            const dishPhotos = req.files?.['dishes.photo']
+                ? req.files['dishes.photo'].map((file) => file.filename)
+                : [];
+    
+            // Update restaurant fields dynamically from req.body
+            restaurant.set(req.body);
+    
+            // Append uploaded images and video if present
+            if (uploadedImages.length) {
+                restaurant.images.push(...uploadedImages);
+            }
+            if (uploadedVideo) {
+                restaurant.video = uploadedVideo;
+            }
+    
+            // Handle `dishes` update if provided in req.body
+            if (req.body.dishes) {
+                const dishesData = JSON.parse(req.body.dishes); // Parse the `dishes` JSON string
+                if (Array.isArray(dishesData)) {
+                    dishesData.forEach((dish, index) => {
+                        if (dishPhotos[index]) {
+                            dish.photo = dishPhotos[index]; // Add corresponding photo to each dish
+                        }
+                    });
+                    restaurant.dishes = dishesData; // Replace existing dishes array
+                } else {
+                    return res.status(400).json({ message: "Invalid dishes format", success: false });
+                }
+            }
+    
+            const updatedRestaurantProfile = await restaurant.save();
+    
+            if (!updatedRestaurantProfile) {
+                return res.status(400).json({
+                    message: "Unable to update the profile",
+                    success: false,
+                });
+            }
+    
+            res.status(200).json({
+                message: "Restaurant Profile has been updated",
+                success: true,
+                updatedRestaurantProfile,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
 }
 
 export default new restaurant();

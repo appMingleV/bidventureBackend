@@ -41,7 +41,7 @@ export const userAutherization=(req,res,next)=>{
 }
 
 
-export const restaurantAutherization=(req,res,next)=>{
+export const restaurantAuthorization=(req,res,next)=>{
   try{
     const authHeader=req.headers.authorization || req.headers?.authorization;
     if(!authHeader){
@@ -58,28 +58,26 @@ export const restaurantAutherization=(req,res,next)=>{
         status: false
       })
     }
-    console.log(token)
+    // console.log(token)
     const secretKey=process.env.SECRETE_KEY;
    
-    jwt.verify(token,secretKey,async (error,decoder)=>{
+    jwt.verify(token,secretKey,async (error,decoded)=>{
                   if(error){
                     return res.status(401).json({
                       msg: "Invalid or expired token",
                       status: false
                     })
                   }
-                  console.log(decoder);
-                  const restauUser=await restAuth.findOne({mobile:decoder.user})
-                  if(!restauUser)return res.status(403).json({
+                  // console.log(decoded);
+                  const restaurantUser=await restAuth.findOne({mobile:decoded.user})
+                  if(!restaurantUser)return res.status(403).json({
                     success:false,
                     message:"Restaurant User not found"
                   })
-                  req.restaUser={id:restauUser.id,...decoder};
-                  
-
+                  // console.log(restaurantUser._id)
+                  req.restaurantUser = {id:restaurantUser._id};
+                  next();
     })
-   
-     next();
   }catch(err){
     return res.status(500).json({
       success:false,
