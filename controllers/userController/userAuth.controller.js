@@ -250,38 +250,41 @@ class UserAuthController {
         }
     }
 
-    async updateEventDetails(req,res){
+    async updateEventDetails(req, res) {
         try {
             const bidId = req.params.id;
-
-            if(!bidId){
-                return res.status(400).json({message:"Invalid bid",success:false});
+    
+            if (!bidId) {
+                return res.status(400).json({ message: "Invalid bid", success: false });
             }
-
-            let event = await BidForm.findById(bidId);
-
-            if(!event){
-                return res.status(400).json({message:"Event not found",success:false});
+    
+            // Find the event by its ID
+            const event = await BidForm.findById(bidId);
+    
+            if (!event) {
+                return res.status(404).json({ message: "Event not found", success: false });
             }
-
-            event = {...req.body};
-            event.eventStatus = "Pending";
-
+    
+            // Update the fields using req.body
+            event.set(req.body);
+            event.eventStatus = "Pending"; // Ensure eventStatus is always set to "Pending"
+    
+            // Save the updated document
             const updatedEventDetails = await event.save();
-
-            if(!updatedEventDetails){
-                return res.status(400).json({message:"Can't update the Event details",success:false})
-            }
-
-            res.status(200).json({message:"Updated the Event details",success:true,updatedEventDetails});
-
+    
+            res.status(200).json({
+                message: "Updated the Event details successfully",
+                success: true,
+                updatedEventDetails,
+            });
         } catch (error) {
             return res.status(500).json({
-                status: false,
-                message: err.message,
+                message: error.message || "Internal Server Error",
+                success: false,
             });
         }
     }
+    
 }
 
 export default new UserAuthController();
