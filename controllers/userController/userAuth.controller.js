@@ -258,10 +258,16 @@ class UserAuthController {
                 return res.status(400).json({message:"Invalid bid",success:false});
             }
 
-            const editedEventDetails = {...req.body};
-            editedEventDetails.eventStatus = "Pending";
+            let event = await BidForm.findById(bidId);
 
-            const updatedEventDetails = await editedEventDetails.save();
+            if(!event){
+                return res.status(400).json({message:"Event not found",success:false});
+            }
+
+            event = {...req.body};
+            event.eventStatus = "Pending";
+
+            const updatedEventDetails = await event.save();
 
             if(!updatedEventDetails){
                 return res.status(400).json({message:"Can't update the Event details",success:false})
