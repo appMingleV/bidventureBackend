@@ -135,6 +135,45 @@ class restaurant{
             });
         }
     }
+
+    async getAllRestaurants(req,res){
+        try {
+            const restaurant = await Restaurant.find();
+
+            res.status(200).json({
+                message: restaurant.length ? "Restaurant details fetched successfully" : "No restaurants found",
+                success: restaurant.length ? true : false,
+                data: restaurant.length ? restaurant : null
+            })
+
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
+
+    async getSingleRestaurant(req,res){
+        try {
+            const restaurantId = req.params.id || req.restaurantUser.id;
+            // console.log(restaurantId)
+
+            const restaurant = await Restaurant.findById(restaurantId);
+
+            res.status(200).json({
+                message: restaurant ? "Restaurant details fetched successfully" : "No restaurants found",
+                success: restaurant ? true : false,
+                data: restaurant ? restaurant : null
+            })
+
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                message: error.message,
+            });
+        }
+    }
 }
 
 export default new restaurant();

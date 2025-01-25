@@ -25,6 +25,7 @@ restaurantProtectedRoute.post(
     restaurantAuthController.updateRestaurant
 )
 
+    .get('/profile',restaurantAuthController.getSingleRestaurant)
 
 
 export default routes;

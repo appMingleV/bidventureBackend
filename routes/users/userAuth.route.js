@@ -3,6 +3,7 @@ import userAuthController from '../../controllers/userController/userAuth.contro
 import {userAutherization} from '../../middlewares/auth.js'
 import bids from './bid.route.js'
 import { upload } from '../../middlewares/multer.js'
+import restaurantAuthController from '../../controllers/restaurantsController/restaurantAuth.controller.js';
 const routes = Router();
 const userProtectedRoutes = Router();
 
@@ -22,6 +23,8 @@ userProtectedRoutes
     .use('/bid',bids)
     .put('/cancel-event/:id',userAuthController.updateEventStatus)
     .post('/update-event/:id',userAuthController.updateEventDetails)
+    .get('/restaurants',restaurantAuthController.getAllRestaurants)
+    .get('/restaurants/:id',restaurantAuthController.getSingleRestaurant)
 
 export default routes;
 export { userProtectedRoutes }

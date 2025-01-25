@@ -8,8 +8,9 @@ import { Server } from 'socket.io';
 
 connectDB();
 
-const app = express();
+const app = express({ limit: '300mb' });
 const server = http.createServer(app);
+server.timeout = 0; // Disable timeout
 
 const io = new Server(server, {
   cors: {
