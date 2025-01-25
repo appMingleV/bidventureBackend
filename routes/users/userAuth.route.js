@@ -21,6 +21,7 @@ userProtectedRoutes
     .put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
     .use('/bid',bids)
     .put('/cancel-event/:id',userAuthController.updateEventStatus)
+    .post('/update-event/:id',userAuthController.updateEventDetails)
 
 export default routes;
 export { userProtectedRoutes }
