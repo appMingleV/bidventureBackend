@@ -66,10 +66,8 @@ const restaurantSchema = new mongoose.Schema({
         default: [], // Default value is an empty array
     },
     seatingCapacity: {
-        type: Number,
+        type: String,
         required: false,
-        min: [1, "Seating capacity must be at least 1"],
-        max: [1000, "Seating capacity cannot exceed 1000"],
     },
     eventType: {
         type: [String],
