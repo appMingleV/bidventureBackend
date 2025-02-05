@@ -20,12 +20,13 @@ restaurantProtectedRoute.post(
     upload.fields([
         { name: 'images', maxCount: 7 }, // Accept up to 5 restaurant images
         { name: 'video', maxCount: 1 },  // Accept 1 restaurant video
-        { name: 'dishes.photo', maxCount: 1 }, // Accept up to 10 dish photos
+        { name: 'dishes.photo', maxCount: 1 }, // Accept only 1 dish photo
     ]),
     restaurantAuthController.updateRestaurant
 )
 
     .get('/profile',restaurantAuthController.getSingleRestaurant)
+    .get('/all',restaurantAuthController.getAllRestaurants)
 
 
 export default routes;
