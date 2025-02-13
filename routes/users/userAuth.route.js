@@ -20,6 +20,12 @@ userProtectedRoutes
     .post('/profile',userAuthController.profile)
     .get('/profile/',userAuthController.getProfile)
     .put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
+
+    .get('/allUsers',userAuthController.getAllUsers)
+
+
+
+
     .use('/bid',bids)
     .put('/cancel-event/:id',userAuthController.updateEventStatus)
     .post('/update-event/:id',userAuthController.updateEventDetails)
