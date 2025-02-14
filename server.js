@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 import http from "http";
 import { Server } from "socket.io";
+import cors from 'cors';
 
 connectDB();
 
@@ -22,6 +23,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use("/api/uploads", express.static("Uploads"));
 app.use("/api", routes);
+app.use(cors());
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
