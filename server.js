@@ -21,9 +21,9 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use("/api/uploads", express.static("Uploads"));
 app.use("/api", routes);
-app.use(cors());
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
