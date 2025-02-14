@@ -142,7 +142,15 @@ const restaurantSchema = new mongoose.Schema({
         },
         required: false, // Social links are optional
         default: [], // Default to an empty array
-    },    
+    },
+    logo:{
+        type:String,
+        required:false
+    },
+    coverImage:{
+        type:String,
+        required:false
+    }    
 });
 
 // Create the model

@@ -21,7 +21,7 @@ userProtectedRoutes
     .get('/profile/',userAuthController.getProfile)
     .put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
 
-    .get('/allUsers',userAuthController.getAllUsers)
+    // .get('/allUsers',userAuthController.getAllUsers)
 
 
 

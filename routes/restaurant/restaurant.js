@@ -18,9 +18,11 @@ routes.use('/bid',restaurantAuthorization,bid)
 restaurantProtectedRoute.post(
     '/profile',
     upload.fields([
-        { name: 'images', maxCount: 7 }, // Accept up to 5 restaurant images
+        { name: 'images', maxCount: 6 }, // Accept up to 6 restaurant images
         { name: 'video', maxCount: 1 },  // Accept 1 restaurant video
         { name: 'dishes.photo', maxCount: 1 }, // Accept only 1 dish photo
+        { name: 'logo', maxCount:1 },
+        { name:'coverImage',maxCount:1 }
     ]),
     restaurantAuthController.updateRestaurant
 )
