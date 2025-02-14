@@ -2,7 +2,7 @@ import  {Router} from 'express';
 import user, { userProtectedRoutes } from './users/userAuth.route.js'
 import restaurant, { restaurantProtectedRoute } from './restaurant/restaurant.js'
 
-import AdminLogin from './admin/login.js'
+import AdminRouter from './admin/admin.routes.js'
 const router=Router();
 
 router.get('/',(req,res)=>{
@@ -15,7 +15,7 @@ router.get('/',(req,res)=>{
     }
 });
 
-router.use('/login',AdminLogin);
+router.use('/admin',AdminRouter);
 
 router.use('/user',user);
 router.use('/user',userProtectedRoutes)
