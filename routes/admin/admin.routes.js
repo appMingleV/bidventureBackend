@@ -1,5 +1,5 @@
 import  { Router } from 'express';
-import { adminRegister, adminLogin , getAllUsers} from '../../controllers/adminController/loginController.js';
+import { adminRegister, adminLogin , getAllUsers, getAllRestaurants} from '../../controllers/adminController/loginController.js';
 
 const AdminRouter = Router();
 
@@ -9,7 +9,7 @@ AdminRouter.post('/login', adminLogin);
 
 AdminRouter.get('/users',  getAllUsers );
 
-AdminRouter.get('/restaurants',  getAllUsers );  
+AdminRouter.get('/restaurants',  getAllRestaurants );  
 
 
 
