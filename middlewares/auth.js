@@ -1,6 +1,7 @@
 import userAuth from "../models/users/userAuth.model.js";
 import restAuth from "../models/restaurants/restaurantAuth.model.js";
 import jwt from "jsonwebtoken";
+import adminModel from "../models/admin/adminModel.js";
 export const userAutherization = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || req.headers?.authorization;
@@ -30,7 +31,7 @@ export const userAutherization = (req, res, next) => {
       if (!userDetails)
         return res
           .status(400)
-          .json({ status: "failed", message: "user not found" });
+          .json({ status: "failed", message: "Unauthorized User" });
       //  console.log("userDetails --> ",userDetails);
       if (token !== userDetails.token)
         return res
@@ -84,7 +85,7 @@ export const restaurantAuthorization = (req, res, next) => {
       if (!restaurantUser)
         return res.status(403).json({
           success: false,
-          message: "Restaurant User not found",
+          message: "Unauthorized Restaurant",
         });
       // console.log(restaurantUser._id)
       req.restaurantUser = { id: restaurantUser._id };
@@ -97,3 +98,49 @@ export const restaurantAuthorization = (req, res, next) => {
     });
   }
 };
+
+export const adminAuth = (req,res,next) =>{
+  try {
+    const authHeader = req.headers.authorization || req.headers?.authorization;
+    if (!authHeader) {
+      return res.status(403).json({
+        success: false,
+        message: "Authorization header not found",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(403).json({
+        msg: "Token not provided",
+        status: false,
+      });
+    }
+    // console.log(token)
+    const secretKey = process.env.SECRETE_KEY;
+
+    jwt.verify(token, secretKey, async (error, decoded) => {
+      if (error) {
+        return res.status(401).json({
+          msg: "Invalid or expired token",
+          status: false,
+        });
+      }
+      console.log(decoded);
+      const admin = await adminModel.findById(decoded.admin.id)
+      if (!admin)
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized Admin",
+        });
+      // console.log(admin._id)
+      req.admin = { id: admin._id };
+      next();
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+}

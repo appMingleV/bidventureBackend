@@ -1,16 +1,21 @@
 import  { Router } from 'express';
 import { adminRegister, adminLogin , getAllUsers, getAllRestaurants} from '../../controllers/adminController/loginController.js';
+import restaurantAuthController from '../../controllers/restaurantsController/restaurantAuth.controller.js';
+import { adminAuth } from '../../middlewares/auth.js';
+
 
 const AdminRouter = Router();
 
-AdminRouter.post('/adminRegister', adminRegister);
+AdminRouter.post('/adminRegister', adminRegister)
+    .post('/login', adminLogin)
 
-AdminRouter.post('/login', adminLogin);
+const AdminProtectedRouter = Router();
+AdminProtectedRouter.use(adminAuth)
 
-AdminRouter.get('/users',  getAllUsers );
+AdminProtectedRouter
+    .get('/users',  getAllUsers )
+    .get('/restaurants',  getAllRestaurants )
+    .get('/restaurants/profile', restaurantAuthController.getSingleRestaurant )
 
-AdminRouter.get('/restaurants',  getAllRestaurants );  
 
-
-
-export default AdminRouter;
+export { AdminRouter,AdminProtectedRouter };

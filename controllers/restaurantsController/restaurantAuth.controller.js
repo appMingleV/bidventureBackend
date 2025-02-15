@@ -273,8 +273,17 @@ class restaurant{
 
     async getSingleRestaurant(req,res){
         try {
-            const restaurantId = req.query?.id || req.restaurantUser.id;
-            // console.log("query -> ",req.query.id)
+            let restaurantId;
+
+            if(req.query.id){
+                restaurantId = req.query.id;
+            }
+            if(req.restaurantUser){
+                restaurantId = req.restaurantUser.id;
+            }
+            if(req.admin){
+                restaurantId = req.query.id;
+            }
             // console.log("restaurant -> ",req.restaurantUser.id)
 
             const restaurant = await Restaurant.findById(restaurantId);

@@ -45,7 +45,7 @@ export const adminLogin = async (req, res) => {
         return res.status(401).json({ message: "Invalid email or password" });
       }
       const payload = {
-        user: {
+        admin: {
           id: admin._id,
           email: admin.email
         },
