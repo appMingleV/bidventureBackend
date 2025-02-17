@@ -191,6 +191,7 @@ class restaurant{
 
         // Update restaurant fields dynamically from req.body
         restaurant.set(req.body);
+        console.log("Updating restaurant profile ->  ",req.body);
 
         // Delete old images if new ones are uploaded
         if (uploadedImages.length) {
