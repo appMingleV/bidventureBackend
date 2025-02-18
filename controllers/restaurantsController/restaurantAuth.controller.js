@@ -186,6 +186,7 @@ class restaurant{
         const dishPhotos = req.files?.["dishes.photo"]
             ? req.files["dishes.photo"].map((file) => file.filename)
             : [];
+            console.log("files -> ", req.files)
         const logo = req.files?.logo ? req.files.logo.filename : null;
         const coverImage = req.files?.coverImage ? req.files.coverImage.filename : null;
 
