@@ -187,8 +187,8 @@ class restaurant{
             ? req.files["dishes.photo"].map((file) => file.filename)
             : [];
             console.log("files -> ", req.files)
-        const logo = req.files?.logo ? req.files.logo.filename : null;
-        const coverImage = req.files?.coverImage ? req.files.coverImage.filename : null;
+        const logo = req.files?.logo ? req.files.logo[0].filename : null;
+        const coverImage = req.files?.coverImage ? req.files.coverImage[0].filename : null;
 
         // Update restaurant fields dynamically from req.body
         restaurant.set(req.body);
