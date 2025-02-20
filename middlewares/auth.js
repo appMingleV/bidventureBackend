@@ -4,13 +4,16 @@ import jwt from "jsonwebtoken";
 import adminModel from "../models/admin/adminModel.js";
 export const userAutherization = (req, res, next) => {
   try {
+      
     const authHeader = req.headers.authorization || req.headers?.authorization;
+   
     if (!authHeader)
       return res.status(403).json({
         success: false,
         message: "Authorization header not found",
       });
     const token = authHeader.split(" ")[1];
+    
 
     if (!token) {
       return res.status(403).json({ msg: "Token not provided", status: false });

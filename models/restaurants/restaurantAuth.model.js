@@ -150,7 +150,12 @@ const restaurantSchema = new mongoose.Schema({
     coverImage:{
         type:String,
         required:false
-    }    
+    },   
+    status:{
+        type:String,
+        enum:["inactive","active"],
+        default:"inactive"
+    }
 });
 
 // Create the model

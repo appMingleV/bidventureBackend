@@ -74,10 +74,12 @@ class UserAuthController {
             }
 
             const secretKey = process.env.SECRETE_KEY;
+            console.log(secretKey)
             const token = jwt.sign({ user: mobile }, secretKey);
 
             // const user = await userAuth.findOne({mobile});
             // console.log(user,token);
+            console.log(user)
             if(!user) await userAuth.create({mobile});
 
             const updateUser = await User.findOneAndUpdate(
@@ -126,8 +128,10 @@ class UserAuthController {
     async profile(req,res){
     try{
         const userId = req.user.id;
+        // console.log(userId)
         // console.log("userId --> ",userId)
         const profile = {...req.body}
+        console.log(profile)
         if(!userId){
             return res.status(403).json({
                 status: false,
@@ -135,7 +139,7 @@ class UserAuthController {
             });
         }
         
-        const updatedProfile = await User.findByIdAndUpdate(userId,profile);
+        const updatedProfile = await User.findByIdAndUpdate(userId,profile,{ new: true });
         if(!updatedProfile){
             return res.status(403).json({
                 status: false,
@@ -245,7 +249,7 @@ class UserAuthController {
         } catch (error) {
             return res.status(500).json({
                 status: false,
-                message: err.message,
+                message: error.message,
             });
         }
     }
