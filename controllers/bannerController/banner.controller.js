@@ -1,4 +1,5 @@
 import Banner from "../../models/banner/banner.model.js";
+import fs from "fs"
 
 export const uploadBanner = async (req, res) => {
   try {
@@ -19,7 +20,7 @@ export const uploadBanner = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message:"images Uplaoded Successfully"
+      message: "images Uplaoded Successfully",
     });
   } catch (error) {
     return res.status(401).json({
@@ -32,7 +33,7 @@ export const uploadBanner = async (req, res) => {
 export const getBanner = async (req, res) => {
   try {
     const banners = await Banner.find();
-    if (!banners)
+    if (banners.length === 0 || banners[0].images.length===0)
       return res
         .status(401)
         .json({ success: false, message: "Banner does not exist" });
@@ -42,6 +43,33 @@ export const getBanner = async (req, res) => {
     });
   } catch (error) {
     return res.status({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const deleteSingleImage = async (req, res) => {
+  try {
+    const { id, imageurl } = req.body;
+    if (!id || !imageurl) {
+      return res.status(401).json({
+        success: false,
+        message: "Id Or Imageurl is required",
+      });
+    }
+    const image = await Banner.findbyId(id);
+    if (!image) {
+      return res.status(401).json({
+        success: false,
+        message: "Banner Does not exist",
+      });
+    }
+    // if()
+ 
+
+  } catch (error) {
+    return res.status(200).json({
       success: false,
       error: error.message,
     });

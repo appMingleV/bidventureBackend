@@ -1,8 +1,10 @@
 import  {Router} from 'express';
 import user, { userProtectedRoutes } from './users/userAuth.route.js'
 import restaurant, { restaurantProtectedRoute } from './restaurant/restaurant.js'
+import commonRouter from './common/common.routes.js';
 
 import { AdminRouter,AdminProtectedRouter } from './admin/admin.routes.js'
+// import { getBanner } from "../controllers/bannerController/banner.controller.js"
 const router=Router();
 
 router.get('/',(req,res)=>{
@@ -14,7 +16,8 @@ router.get('/',(req,res)=>{
         res.status(500).json({error:err.message});
     }
 });
-
+// console.log("hello")
+router.use("/common", commonRouter)
 router.use('/admin',AdminRouter);
 router.use('/admin',AdminProtectedRouter);
 
