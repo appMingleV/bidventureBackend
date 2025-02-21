@@ -21,6 +21,7 @@ export const uploadBanner = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "images Uplaoded Successfully",
+      banners:image
     });
   } catch (error) {
     return res.status(401).json({
