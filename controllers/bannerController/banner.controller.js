@@ -24,9 +24,10 @@ export const uploadBanner = async (req, res) => {
       banners:image
     });
   } catch (error) {
-    return res.status(401).json({
+    return res.status(500).json({
       success: false,
-      error: error.message,
+      message: error.message,
+      error:error.stack
     });
   }
 };
