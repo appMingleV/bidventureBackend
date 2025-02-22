@@ -82,7 +82,7 @@ class UserAuthController {
             console.log(user)
             if(!user) await userAuth.create({mobile});
 
-            const updateUser = await User.findOneAndUpdate(
+            const userProfile = await User.findOneAndUpdate(
                 { mobile: mobile }, // Query to find the document
                 { token: token },   // Fields to update
                 { new: true }       // Option to return the updated document
@@ -91,7 +91,7 @@ class UserAuthController {
             return res.status(200).json({
                 status: true,
                 message: 'Login successfully',
-                updateUser,
+                userProfile,
             });
         } catch (err) {
             return res.status(500).json({
