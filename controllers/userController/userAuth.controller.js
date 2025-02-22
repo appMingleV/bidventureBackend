@@ -288,7 +288,36 @@ class UserAuthController {
             });
         }
     }
-    
+    async getAllBids(req,res){
+        try{
+           const {userId}=req.params;
+           const bids=await BidForm.find({userId});
+           const user=await User.findById(userId);
+           if(!user)return res.status(404).json({
+               status:false,
+               message:'User not found'
+           })
+           if(userId!=req.user.id)return res.status(403).json({
+               status:false,
+               message:'wrong user to try access data '
+           })
+           if(bids.length==0){
+               return res.status(404).json({
+                   status:true,
+                   message:'No bids found for this user',
+               })
+           }
+           return res.status(200).json({
+               status:true,
+               bids
+           });
+        }catch(err){
+           return res.status(500).json({
+               status:false,
+               message:err.message
+           });
+        }
+    }
 }
 
 export default new UserAuthController();

@@ -1,28 +1,18 @@
 import BidForm from "../../models/users/bidForm.model.js";
-import User from "../../models/users/userAuth.model.js";
+
 class bidRestarurant{
-   async getAllBids(req,res){
+   async getAllEvents(req,res){
      try{
-        const {userId}=req.params;
-        const bids=await BidForm.find({userId});
-        const user=await User.findById(userId);
-        if(!user)return res.status(404).json({
-            status:false,
-            message:'User not found'
-        })
-        if(userId!=req.user.id)return res.status(403).json({
-            status:false,
-            message:'wrong user to try access data '
-        })
-        if(bids.length==0){
+        const Events = await BidForm.find({eventStatus:"Pending"});
+        if(Events.length==0){
             return res.status(404).json({
                 status:true,
-                message:'No bids found for this user',
+                message:'No new events found',
             })
         }
         return res.status(200).json({
             status:true,
-            bids
+            Events
         });
      }catch(err){
         return res.status(500).json({

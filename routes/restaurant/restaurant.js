@@ -3,6 +3,7 @@ import restaurantAuthController from '../../controllers/restaurantsController/re
 import { restaurantAuthorization } from '../../middlewares/auth.js'
 import bid from './bid.route.js'
 import { upload } from '../../middlewares/multer.js';
+import bidRestaurantController from '../../controllers/restaurantsController/bidRestaurant.controller.js';
 const routes=Router();
 
 const restaurantProtectedRoute = Router();
@@ -29,6 +30,7 @@ restaurantProtectedRoute.post(
 
     .get('/profile',restaurantAuthController.getSingleRestaurant)
     .get('/all',restaurantAuthController.getAllRestaurants)
+    .get('/events',bidRestaurantController.getAllEvents)
 
 
 export default routes;
