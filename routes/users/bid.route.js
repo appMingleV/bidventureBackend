@@ -7,6 +7,7 @@ const routes = Router();
 
 routes.get('/all/:userId',userAuthController.getAllBids)
 .get('/single/:bidId',bidRestaurantController.getBidById)
+.post('/create',userAuthController.counterBid)
 
 
 export default routes;

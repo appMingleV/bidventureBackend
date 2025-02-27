@@ -2,6 +2,7 @@ import BidForm from '../../models/users/bidForm.model.js';
 import jwt from 'jsonwebtoken';
 import User from '../../models/users/userAuth.model.js';
 import fs from 'fs';
+import BiddingHistory from '../../models/users/biddingHistory.model.js';
 
 class UserAuthController {
 
@@ -291,7 +292,7 @@ class UserAuthController {
     async getAllBids(req,res){
         try{
            const {userId}=req.params;
-           const bids=await BidForm.find({userId});
+           const bids=await BidForm.find({userId}).populate("bidHistory").exec();
            const user=await User.findById(userId);
            if(!user)return res.status(404).json({
                status:false,
@@ -318,6 +319,197 @@ class UserAuthController {
            });
         }
     }
+    async counterBid(req, res) {
+        try {
+            const userId = req.user.id;
+            const { eventId, restaurantId, price } = req.body;
+    
+            if (!eventId || !restaurantId) {
+                return res.status(400).json({ success: false, message: "eventId & restaurantId are required!" });
+            }
+    
+            const event = await BidForm.findOne({ _id: eventId, userId });
+    
+            if (!event) {
+                return res.status(404).json({ success: false, message: "Event not found or you are not authorized" });
+            }
+    
+            if (event.isBiddingClosed) {
+                return res.status(400).json({ success: false, message: "Bidding is closed for this event" });
+            }
+    
+            // Get the latest bid for this event & restaurant
+            const latestBid = await BiddingHistory.findOne({ eventId, restaurantId }).sort({ createdAt: -1 });
+    
+            if (!latestBid) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No bid exists from this restaurant to counter."
+                });
+            }
+    
+            // If the latest bid was rejected by the restaurant, user can't counter it
+            if (latestBid.status === "Rejected") {
+                return res.status(400).json({
+                    success: false,
+                    message: "You cannot counter this bid as it was rejected by the restaurant."
+                });
+            }
+    
+            // Ensure user cannot place consecutive counter bids
+            if (latestBid.latestBidBy === "User") {
+                return res.status(400).json({
+                    success: false,
+                    message: "You have already countered last. Wait for the restaurant to bid."
+                });
+            }
+    
+            const newBid = new BiddingHistory({
+                eventId,
+                restaurantId,
+                price,
+                bidBy: "User",
+                latestBidBy: "User"
+            });
+    
+            const data = await newBid.save();
+            event.bidHistory.push(data._id);
+            await event.save();
+    
+            res.status(201).json({ message: "Counter bid placed successfully", success: true, data });
+    
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }
+    
+    async acceptBid(req, res) {
+        try {
+            const userId = req.user.id;
+            const { eventId, restaurantId } = req.body;
+    
+            if (!eventId || !restaurantId) {
+                return res.status(400).json({ success: false, message: "eventId & restaurantId are required!" });
+            }
+    
+            const event = await BidForm.findOne({ _id: eventId, userId });
+    
+            if (!event) {
+                return res.status(404).json({ success: false, message: "Event not found or you are not authorized" });
+            }
+    
+            if (event.isBiddingClosed) {
+                return res.status(400).json({ success: false, message: "Bidding is already closed for this event" });
+            }
+    
+            // Find latest accepted bid
+            const acceptedBid = await BiddingHistory.findOne({ eventId, restaurantId }).sort({ createdAt: -1 });
+    
+            if (!acceptedBid) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No bid found to accept from this restaurant."
+                });
+            }
+    
+            acceptedBid.status = "Accepted";
+            await acceptedBid.save();
+    
+            // Close bidding for this event
+            event.isBiddingClosed = true;
+            event.eventStatus = "Accepted";
+            await event.save();
+    
+            res.status(200).json({ message: "Bid accepted successfully!", success: true });
+    
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }
+    async rejectBid(req, res) {
+        try {
+            const { bidId } = req.body;
+            const userId = req.user.id;
+    
+            if (!bidId) {
+                return res.status(400).json({ success: false, message: "bidId is required!" });
+            }
+    
+            const bid = await BiddingHistory.findById(bidId).populate("eventId");
+            if (!bid) {
+                return res.status(404).json({ success: false, message: "Bid not found" });
+            }
+    
+            // Ensure the event belongs to the user
+            if (bid.eventId.userId.toString() !== userId) {
+                return res.status(403).json({ success: false, message: "Unauthorized! You can only reject bids for your events" });
+            }
+    
+            // Update bid status to "Rejected"
+            bid.status = "Rejected";
+            await bid.save();
+    
+            res.status(200).json({
+                success: true,
+                message: "Bid rejected successfully",
+                data: {
+                    bidId: bid._id,
+                    status: bid.status
+                }
+            });
+    
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }   
+    async getAllBidsForEvent(req, res) {
+        try {
+            const { eventId } = req.query;
+    
+            if (!eventId) {
+                return res.status(400).json({ success: false, message: "eventId is required!" });
+            }
+    
+            const event = await BidForm.findById(eventId);
+            if (!event) {
+                return res.status(404).json({ success: false, message: "Event not found" });
+            }
+    
+            // Fetch all bids for the event
+            const bidHistory = await BiddingHistory.find({ eventId })
+                .populate("restaurantId", "name") // Fetch restaurant name
+                .sort({ createdAt: 1 }) // Oldest to newest
+                .select("restaurantId bidBy price status createdAt"); // Select required fields
+    
+            if (!bidHistory.length) {
+                return res.status(404).json({ success: false, message: "No bids found for this event" });
+            }
+    
+            // Group bids by restaurantId
+            const groupedBids = bidHistory.reduce((acc, bid) => {
+                const restaurantName = bid.restaurantId.name;
+                if (!acc[restaurantName]) {
+                    acc[restaurantName] = [];
+                }
+                acc[restaurantName].push({
+                    bidBy: bid.bidBy,
+                    price: bid.price,
+                    status: bid.status,
+                    createdAt: bid.createdAt
+                });
+                return acc;
+            }, {});
+    
+            res.status(200).json({
+                success: true,
+                message: "Bidding history retrieved successfully",
+                data: groupedBids
+            });
+    
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }    
 }
 
 export default new UserAuthController();

@@ -64,7 +64,11 @@ const bidFormSchema = new mongoose.Schema({
     bidHistory: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BiddingHistory'
-    }]
+    }],
+    isBiddingClosed: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 const BidForm = mongoose.model("BidForm", bidFormSchema);

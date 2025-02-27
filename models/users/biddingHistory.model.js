@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
 const biddingHistorySchema = new mongoose.Schema({
+    eventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BidForm",
+        required: true
+    },
     restaurantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Restaurant",
         required: true
-    },
-    bidTime: {
-        type: Date,
-        default: Date.now
     },
     bidBy: {
         type: String,
@@ -17,6 +18,11 @@ const biddingHistorySchema = new mongoose.Schema({
     },
     price: {
         type: Number,
+        required: [true, "Bid Price is required for event bidding"]
+    },
+    latestBidBy: {
+        type: String,
+        enum: ['User', 'Restaurant'],
         required: true
     },
     status: {
