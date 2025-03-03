@@ -155,6 +155,10 @@ const restaurantSchema = new mongoose.Schema({
         type:String,
         enum:["inactive","active"],
         default:"inactive"
+    },
+    socketId:{
+         type:String,
+         default:null
     }
 });
 

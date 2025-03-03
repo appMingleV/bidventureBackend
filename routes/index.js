@@ -16,7 +16,6 @@ router.get('/',(req,res)=>{
         res.status(500).json({error:err.message});
     }
 });
-// console.log("hello")
 router.use("/common", commonRouter)
 router.use('/admin',AdminRouter);
 router.use('/admin',AdminProtectedRouter);

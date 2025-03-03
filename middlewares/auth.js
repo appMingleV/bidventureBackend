@@ -3,18 +3,16 @@ import restAuth from "../models/restaurants/restaurantAuth.model.js";
 import jwt from "jsonwebtoken";
 import adminModel from "../models/admin/adminModel.js";
 export const userAutherization = (req, res, next) => {
-  try {
-      
-    const authHeader = req.headers.authorization || req.headers?.authorization;
-   
+  try { 
+    const authHeader = req.headers.authorization || req.headers?.authorization
+  
     if (!authHeader)
       return res.status(403).json({
         success: false,
         message: "Authorization header not found",
       });
     const token = authHeader.split(" ")[1];
-    
-
+    console.log(token)
     if (!token) {
       return res.status(403).json({ msg: "Token not provided", status: false });
     }
@@ -26,7 +24,7 @@ export const userAutherization = (req, res, next) => {
       if (error) {
         return res
           .status(401)
-          .json({ msg: "Invalid or expired token", status: false });
+          .json({ msg: "Invalid or expired token ", status: false });
       }
       // console.log(decoded);
       const userDetails = await userAuth.findOne({ mobile: decoded?.user });
@@ -65,7 +63,7 @@ export const restaurantAuthorization = (req, res, next) => {
         message: "Authorization header not found",
       });
     }
-
+     console.log(authHeader)
     const token = authHeader.split(" ")[1];
     if (!token) {
       return res.status(403).json({

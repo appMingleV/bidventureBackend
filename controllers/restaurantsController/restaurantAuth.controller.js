@@ -28,6 +28,7 @@ class restaurant {
   async login(req, res) {
     try {
       const { mobile } = req.body;
+      console.log(req.body)
       if (!mobile) {
         return res.status(403).json({
           status: false,
@@ -37,10 +38,11 @@ class restaurant {
 
       // Save the mobile number with dummy OTP for now
       this.userNumber[mobile] = { otp: "1234" };
+      
 
       return res.status(200).json({
         status: true,
-        message: "OTP sent successfully",
+        message: "OTP sent successfully ",
       });
     } catch (err) {
       return res.status(500).json({

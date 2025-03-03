@@ -4,37 +4,23 @@ import express from "express";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 import http from "http";
-import { Server } from "socket.io";
-import cors from 'cors';
-
+import cors from "cors";
+import { initiateSocket } from "./socket.js";
 connectDB();
-
 const app = express({ limit: "300mb" });
 const server = http.createServer(app);
 server.timeout = 0; // Disable timeout
-
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-
 app.use(express.json());
 app.use(cors());
 app.use("/api/uploads", express.static("Uploads"));
 app.use("/api", routes);
-
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-
-  socket.emit("welcome", "Hello from the ");
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+initiateSocket(server);
+app.use((req, res, next) => {
+  req.io = io;
+  req.restaurantSockets = restaurantSockets;
+  req.userSocket = userSocket;
+  next();
 });
-
 server.listen(process.env.PORT, (err) => {
   if (err) {
     console.error(err);

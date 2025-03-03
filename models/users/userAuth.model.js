@@ -27,6 +27,10 @@ const userSchema=new mongoose.Schema({
     },
     profilePicture:{
         type:String,
+    },
+    socketId:{
+        type:String,
+        default:null  
     }
 })
 

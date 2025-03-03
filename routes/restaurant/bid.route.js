@@ -6,4 +6,5 @@ const route=Router();
 route.get('/single/:bidId',bidRestaurantController.getBidById)
 
 
+
 export default route
