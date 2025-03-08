@@ -120,18 +120,18 @@ class bidRestarurant {
       const data = await newBid.save();
       event.bidHistory.push(data._id);
       await event.save();
-      // console.log(event.userId)
-      // const user = await User.findById(event.userId);
-      // console.log(user)
-      // //socket implementation for the notification
-      // if (user.socketId) {
-      //   io.to(user.socketId).emit("userBidnotificationby", {
-      //     eventId,
-      //     restaurantId,
-      //     price,
-      //     message: "New bid is created",
-      //   });
-      // }
+      console.log(event.userId)
+      const user = await User.findById(event.userId);
+      console.log(user)
+      //socket implementation for the notification
+      if (user.socketId) {
+        io.to(user.socketId).emit("userBidnotificationby", {
+          eventId,
+          restaurantId,
+          price,
+          message: "New bid is created",
+        });
+      }
 
       res
         .status(201)

@@ -19,10 +19,10 @@ routes
 
 
 userProtectedRoutes
-    .post('/bidForm/:userId',userAuthController.bidingForm)
-    .post('/profile',userAuthController.profile)
-    .get('/profile',userAuthController.getProfile)
-    .put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
+.post('/bidForm/:userId',userAuthController.bidingForm)
+.post('/profile',userAuthController.profile)
+.get('/profile',userAuthController.getProfile)
+.put('/profile-picture',upload.single('profilePicture'),userAuthController.updateProfilePicture)
 
     // .get('/allUsers',userAuthController.getAllUsers)
 

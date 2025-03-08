@@ -28,7 +28,6 @@ class UserAuthController {
           mobile,
           otp,
         });
-
         await newUser.save();
       } else {
         // console.log("old user")
@@ -353,7 +352,8 @@ class UserAuthController {
     try {
       const userId = req.user.id;
       const { eventId, restaurantId, price } = req.body;
-      // const { io, restaurantSockets } = req;
+      console.log(req.body)
+      console.log(userId)
       const io=getIO()
 
       if (!eventId || !restaurantId) {
@@ -364,7 +364,7 @@ class UserAuthController {
       }
 
       const event = await BidForm.findOne({ _id: eventId, userId });
-
+      console.log(event)
       if (!event) {
         return res.status(404).json({
           success: false,
