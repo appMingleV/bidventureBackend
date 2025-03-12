@@ -326,6 +326,13 @@ class bidRestarurant {
 
       const { status,eventId } = req.body;
 
+      if(status!=="Accepted"){
+        return res.status(422).json({
+          message:"Wrong status",
+          success:false
+        })
+      }
+
       const event = await BidForm.findById(eventId);
 
       if(!event){
@@ -367,6 +374,58 @@ class bidRestarurant {
       })
     }
   }
+
+  async rejectEvent(req,res){
+    try {
+      const { status,eventId } = req.body;
+
+      if(status!=="Rejected"){
+        return res.status(422).json({
+          message:"Wrong status",
+          success:false
+        })
+      }
+
+      const event = await BidForm.findById(eventId);
+
+      if(!event){
+        return res.status(404).json({
+          message:"Wrong event id",
+          success:false
+        })
+      }
+      const userId = event.userId;
+
+      const user = await User.findById(userId);
+
+      const bidHistory = await BiddingHistory.findOne({eventId})
+
+      bidHistory.status = "Rejected";
+      await bidHistory.save();
+
+      event.eventStatus = status;
+      const result = await event.save();
+
+      if (user.socketId) {
+        // console.log("hello");
+        io.to(user.socketId).emit("eventRejectionNotification", {
+          message: "Your event has been rejected",
+        });
+      }
+
+      res.status(200).json({
+        message:"Event rejected",
+        success:true,
+        result
+      })
+    } catch (error) {
+      return res.status(500).json({
+        success:false,
+        message:error.message
+      })
+    }
+  }
+
 }
 
 export default new bidRestarurant();
