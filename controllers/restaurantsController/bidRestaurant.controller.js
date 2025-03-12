@@ -8,7 +8,7 @@ import User from "../../models/users/userAuth.model.js";
 class bidRestarurant {
   async getAllEvents(req, res) {
     try {
-      const Events = await BidForm.find({ eventStatus: "Pending" }).populate("bidHistory")
+      const Events = await BidForm.find().populate("bidHistory")
       if (Events.length == 0) {
         return res.status(404).json({
           status: true,
@@ -379,7 +379,7 @@ class bidRestarurant {
     try {
       const { status,eventId } = req.body;
 
-      if(status!=="Rejected"){
+      if(status!=="Canceled"){
         return res.status(422).json({
           message:"Wrong status",
           success:false
