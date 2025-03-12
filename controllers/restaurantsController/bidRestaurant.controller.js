@@ -346,7 +346,7 @@ class bidRestarurant {
       const user = await User.findById(userId);
 
       const bidHistory = await BiddingHistory.findOne({eventId})
-
+      console.log(`accept event bid history-> ${bidHistory}`)
       bidHistory.status = status;
       await bidHistory.save();
 
@@ -399,6 +399,7 @@ class bidRestarurant {
       const user = await User.findById(userId);
 
       const bidHistory = await BiddingHistory.findOne({eventId})
+      console.log(`reject event bid history-> ${bidHistory}`)
 
       bidHistory.status = "Rejected";
       await bidHistory.save();
