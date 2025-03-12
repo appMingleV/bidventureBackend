@@ -321,6 +321,52 @@ class bidRestarurant {
       return res.status(500).json({ success: false, message: error.message });
     }
   }
+  async acceptEvent(req,res){
+    try {
+
+      const { status,eventId } = req.body;
+
+      const event = await BidForm.findById(eventId);
+
+      if(!event){
+        return res.status(404).json({
+          message:"Wrong event id",
+          success:false
+        })
+      }
+      const userId = event.userId;
+
+      const user = await User.findById(userId);
+
+      const bidHistory = await BiddingHistory.findOne({eventId})
+
+      bidHistory.status = status;
+      await bidHistory.save();
+
+      event.eventStatus = status;
+      const result = await event.save();
+
+      if (user.socketId) {
+        // console.log("hello");
+        io.to(user.socketId).emit("eventAcceptanceNotification", {
+          message: "Your event has been accepted",
+        });
+      }
+
+      res.status(200).json({
+        message:"Event Accepted",
+        success:true,
+        result
+      })
+
+
+    } catch (error) {
+      return res.status(500).json({
+        success:false,
+        message:error.message
+      })
+    }
+  }
 }
 
 export default new bidRestarurant();

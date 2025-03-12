@@ -35,6 +35,7 @@ restaurantProtectedRoute.post(
     .get('/bidding-history',bidRestaurantController.getBiddingHistory)
     .put('/accept-bid',bidRestaurantController.acceptBid)
     .put('/bid-rejection',bidRestaurantController.rejectBid)
+    .put('/accept-event',bidRestaurantController.acceptEvent)
 
 
 export default routes;
