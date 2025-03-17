@@ -322,6 +322,7 @@ class bidRestarurant {
     }
   }
   async acceptEvent(req,res){
+    const io = getIO();
     try {
 
       const { status,eventId } = req.body;
@@ -376,6 +377,7 @@ class bidRestarurant {
   }
 
   async rejectEvent(req,res){
+    const io = getIO();
     try {
       const { status,eventId } = req.body;
 
