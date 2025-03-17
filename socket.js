@@ -43,18 +43,18 @@ export const initiateSocket = (server) => {
       console.log("User disconnected:", socket.id);
 
       // Find the user or restaurant by socket ID
-      const user = await User.findOne({ socketId: socket.id });
-      const restaurant = await Restaurant.findOne({ socketId: socket.id });
+      // const user = await User.findOne({ socketId: socket.id });
+      // const restaurant = await Restaurant.findOne({ socketId: socket.id });
 
-      if (user) {
-        await User.findByIdAndUpdate(user._id, { socketId: null });
-        console.log(`User ${user._id} disconnected`);
-      }
+      // if (user) {
+      //   await User.findByIdAndUpdate(user._id, { socketId: null });
+      //   console.log(`User ${user._id} disconnected`);
+      // }
 
-      if (restaurant) {
-        await Restaurant.findByIdAndUpdate(restaurant._id, { socketId: null });
-        console.log(`Restaurant ${restaurant._id} disconnected`);
-      }
+      // if (restaurant) {
+      //   await Restaurant.findByIdAndUpdate(restaurant._id, { socketId: null });
+      //   console.log(`Restaurant ${restaurant._id} disconnected`);
+      // }
     });
   });
 
