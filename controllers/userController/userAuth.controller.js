@@ -498,8 +498,8 @@ class UserAuthController {
       
       const restaurant=await Restaurant.findById(restaurantId)
       if (restaurant.socketId) {
-        console.log("hello")
-        io.to(restaurant.socketId).emit("accptedNotifiaction", {
+        console.log("bid accepted by user")
+        io.to(restaurant.socketId).emit("acceptedNotification", {
           userId,
           eventId,
           acceptedBid,
@@ -563,6 +563,7 @@ class UserAuthController {
      const restaurant=await Restaurant.findById(bid.restaurantId)
       if(restaurant.socketId)
       {
+        console.log("bid rejected by user")
            io.to(restaurant.socketId).emit('rejectedNotification',{
             bidId,
             userId,
