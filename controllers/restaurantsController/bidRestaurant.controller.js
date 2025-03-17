@@ -352,7 +352,7 @@ class bidRestarurant {
 
       event.eventStatus = status;
       const result = await event.save();
-
+      console.log("user details => ",user)
       if (user.socketId) {
         console.log("event acceptance by restaurant ============== ");
         io.to(user.socketId).emit("eventAcceptanceNotification", {
