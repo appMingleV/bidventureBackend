@@ -16,14 +16,16 @@ export const initiateSocket = (server) => {
 
     // Store socket ID for Users
     socket.on("userJoin", async ({ userId }) => {
-      await User.findByIdAndUpdate(userId, { socketId: socket.id });
+      const savedUser = await User.findByIdAndUpdate(userId, { socketId: socket.id });
       console.log("User joined:", userId);
+      console.log(`Saved User details => ${savedUser}`)
     });
 
     // Store socket ID for Restaurants
     socket.on("restaurantJoin", async ({ restaurantId }) => {
-      await Restaurant.findByIdAndUpdate(restaurantId, { socketId: socket.id });
+      const savedRestaurant = await Restaurant.findByIdAndUpdate(restaurantId, { socketId: socket.id });
       console.log("Restaurant joined:", restaurantId);
+      console.log(`Saved Restaurant details => ${savedRestaurant}`)
     });
 
     // Handle Disconnection
