@@ -125,7 +125,7 @@ class bidRestarurant {
       console.log(user)
       //socket implementation for the notification
       if (user.socketId) {
-        io.to(user.socketId).emit("userBidnotification", {
+        io.to(user.socketId).emit("userBidNotification", {
           eventId,
           restaurantId,
           price,
