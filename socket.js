@@ -34,8 +34,10 @@ export const initiateSocket = (server) => {
         { new: true }
     );
     
-      console.log("Restaurant joined:", restaurantId);
-      console.log(`Saved Restaurant details => ${savedRestaurant}`)
+      if (savedRestaurant) {
+        socket.join("restaurantJoin");
+        console.log(`Restaurant ${restaurantId} joined restaurant room`);
+      }
     });
 
     // Handle Disconnection

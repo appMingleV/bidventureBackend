@@ -106,6 +106,8 @@ class UserAuthController {
       const bidFormDetails = { ...req.body };
       const { userId } = req.params;
 
+      const io = getIO();
+
       console.log(bidFormDetails);
       if (!userId)
         return res.status(403).json({
@@ -117,6 +119,13 @@ class UserAuthController {
         ...bidFormDetails,
         eventImage: req?.file?.filename,
       });
+
+      if(bidFormDetais){
+        io.to("restaurantJoin").emit("newEvent",{
+          message:"A new event has been created",
+          eventId:bidFormDetais._id
+        })
+      }
 
       return res.status(200).json({
         status: true,
