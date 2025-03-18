@@ -34,13 +34,13 @@ export const userAutherization = (req, res, next) => {
           .status(400)
           .json({ status: "failed", message: "Unauthorized User" });
       //  console.log("userDetails --> ",userDetails);
-      if (token !== userDetails.token)
-        return res
-          .status(400)
-          .json({
-            status: "failed",
-            message: "token does not match! please login again",
-          });
+      // if (token !== userDetails.token)
+      //   return res
+      //     .status(400)
+      //     .json({
+      //       status: "failed",
+      //       message: "token does not match! please login again",
+      //     });
       // Token is valid, proceed with request
       req.user = { id: userDetails._id }; // Store decoded user info in req for use in other routes
       next();
